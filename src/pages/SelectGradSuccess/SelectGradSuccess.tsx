@@ -1,10 +1,22 @@
 import { useNavigate } from 'react-router-dom';
 
-import { Box, Button, Typography } from '@mui/material';
+import { Assessment, Business, CloudUpload, Dashboard } from '@mui/icons-material';
+import { Box, Button, Card, CardContent, Container, Grid, Typography } from '@mui/material';
 
 import MainLayout from '@/layout/MainLayout';
 
-import { buttonContainer, dashboardContainer, dashboardSubtitle, dashboardTitle, navButton, usiLogo } from './styles';
+import {
+  backgroundOverlay,
+  buttonContainer,
+  dashboardContainer,
+  dashboardSubtitle,
+  dashboardTitle,
+  featureCard,
+  featureIcon,
+  heroSection,
+  navButton,
+  utechLogo,
+} from './styles';
 
 const SelectGradSuccessComponent = () => {
   const navigate = useNavigate();
@@ -27,32 +39,104 @@ const SelectGradSuccessComponent = () => {
 
   return (
     <Box sx={dashboardContainer}>
-      <Box sx={usiLogo}>USI</Box>
-      <Typography variant="h1" sx={dashboardTitle}>
-        Select Graduate Success Tools
-      </Typography>
-      <Typography sx={dashboardSubtitle}>
-        Empowering USI Account Managers & Leaders to explore role expectations, assess competencies, and plan for career
-        growth through a guided, interactive experience
-      </Typography>
+      {/* Background with gradient and overlay */}
+      <Box sx={backgroundOverlay} />
+      
+      {/* Hero Section */}
+      <Container maxWidth="lg" sx={heroSection}>
+        {/* UTECH Logo */}
+        <Box component="img" src="/assets/logo/utech/utech-256x78.png" alt="UTECH" sx={utechLogo} />
+        
+        {/* Main Title and Subtitle */}
+        <Typography variant="h1" sx={dashboardTitle}>
+          Select Graduate Success Tools
+        </Typography>
+        <Typography sx={dashboardSubtitle}>
+          Empowering USI Account Managers & Leaders to explore role expectations, assess competencies, and plan for
+          career growth through a guided, interactive experience
+        </Typography>
 
-      <Box sx={buttonContainer}>
-        <Button sx={navButton} onClick={handleNavigateToHome} variant="contained">
-          ← Back to Home
-        </Button>
+        {/* Feature Cards Grid */}
+        <Grid container spacing={3} sx={{ mt: 4, mb: 6 }}>
+          <Grid item xs={12} md={6} lg={3}>
+            <Card sx={featureCard}>
+              <CardContent sx={{ textAlign: 'center', p: 3 }}>
+                <Assessment sx={featureIcon} />
+                <Typography variant="h6" sx={{ mt: 2, mb: 1, color: '#1e3a8a' }}>
+                  Success Predictor
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Analyze producer performance metrics and predict success outcomes
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+          
+          <Grid item xs={12} md={6} lg={3}>
+            <Card sx={featureCard}>
+              <CardContent sx={{ textAlign: 'center', p: 3 }}>
+                <Dashboard sx={featureIcon} />
+                <Typography variant="h6" sx={{ mt: 2, mb: 1, color: '#1e3a8a' }}>
+                  Performance Dashboard
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Compare producers against market metrics and benchmarks
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+          
+          <Grid item xs={12} md={6} lg={3}>
+            <Card sx={featureCard}>
+              <CardContent sx={{ textAlign: 'center', p: 3 }}>
+                <Business sx={featureIcon} />
+                <Typography variant="h6" sx={{ mt: 2, mb: 1, color: '#1e3a8a' }}>
+                  Business Intelligence
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Advanced analytics for strategic decision making
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+          
+          <Grid item xs={12} md={6} lg={3}>
+            <Card sx={featureCard}>
+              <CardContent sx={{ textAlign: 'center', p: 3 }}>
+                <CloudUpload sx={featureIcon} />
+                <Typography variant="h6" sx={{ mt: 2, mb: 1, color: '#1e3a8a' }}>
+                  Data Integration
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Seamless integration with SharePoint and data sources
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
 
-        <Button sx={navButton} onClick={handleNavigateToPredictor} variant="contained">
-          Select Grad Success Predictor →
-        </Button>
+        {/* Action Buttons */}
+        <Box sx={buttonContainer}>
+          <Button sx={navButton} onClick={handleNavigateToPredictor} variant="contained" size="large">
+            <Assessment sx={{ mr: 1 }} />
+            Select Grad Success Predictor
+          </Button>
 
-        <Button sx={navButton} onClick={handleNavigateToTable} variant="contained">
-          Select vs MM Table →
-        </Button>
+          <Button sx={navButton} onClick={handleNavigateToTable} variant="outlined" size="large">
+            <Dashboard sx={{ mr: 1 }} />
+            Performance Dashboard
+          </Button>
 
-        <Button sx={navButton} onClick={handleNavigateToSharePoint} variant="contained">
-          SharePoint Integration →
-        </Button>
-      </Box>
+          <Button sx={navButton} onClick={handleNavigateToSharePoint} variant="outlined" size="large">
+            <CloudUpload sx={{ mr: 1 }} />
+            SharePoint Integration
+          </Button>
+
+          <Button sx={navButton} onClick={handleNavigateToHome} variant="text" size="large">
+            ← Back to Home
+          </Button>
+        </Box>
+      </Container>
     </Box>
   );
 };
