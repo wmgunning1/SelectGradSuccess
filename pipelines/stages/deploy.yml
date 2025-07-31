@@ -1,0 +1,29 @@
+stages:
+  - stage: Deploy
+    displayName: Deploy
+    dependsOn: [FrontDoor,Swa]
+    condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+    jobs:
+      - job: Deploy
+        variables:
+          FrontDoorId: $[ stageDependencies.FrontDoor.FrontDoor_1.outputs['RetrieveFrontDoorId.FrontDoorId'] ]
+          ApiToken: $[ stageDependencies.Swa.Swa_1.outputs['RetrieveSwaVars.ApiToken'] ]
+        steps:
+          - download: current
+            artifact: $(buildOutputFolder)
+                    
+          - template: ../shared/prepare-parameters.yml
+            parameters: 
+                tokenizedFile: $(Pipeline.Workspace)/$(buildOutputFolder)/staticwebapp.config.json
+
+          - task: AzureStaticWebApp@0
+            inputs:
+              app_location: '/'
+              skip_app_build: true
+              skip_api_build: true
+              is_static_export: true
+              azure_static_web_apps_api_token: '$(ApiToken)'
+              cwd: $(Pipeline.Workspace)/$(buildOutputFolder)
+              config_file_location: './'
+              verbose: true
+            displayName: 'Deploy WebApp to SWA'

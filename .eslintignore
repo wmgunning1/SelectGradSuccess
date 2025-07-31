@@ -1,0 +1,9 @@
+dist
+dev-dist
+public
+pipelines
+.husky
+node_modules
+.vscode
+sw.ts
+TempCodeToPort

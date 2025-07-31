@@ -1,0 +1,30 @@
+trigger:
+  branches:
+    include:
+      - 'dev'
+  tags:
+    include:
+      - '*'
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  - template: variables/base-variables.yml
+  - template: variables/variables.yml
+
+stages:
+  - template: stages/build.yml
+
+  - ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
+    - template: stages/swa.yml
+
+    - template: stages/frontdoor.yml
+  
+    - template: stages/deploy.yml
+
+    - template: stages/monitoring.yml
+      parameters:
+        frontDoorResourceGroupName: $(FrontDoorResourceGroupName)
+    
+    - template: stages/e2e.yml

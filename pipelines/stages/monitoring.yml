@@ -1,0 +1,31 @@
+parameters:
+- name: frontDoorResourceGroupName
+  type: string
+
+stages:
+- stage: Monitoring
+  dependsOn: [Deploy]
+  displayName: Setup Monitoring
+  condition: succeeded()
+  jobs:
+      - job: SetupMonitoringRules
+        displayName: Set Monitoring Parameters
+        steps:
+          - template: ../shared/prepare-parameters.yml
+            parameters: 
+                tokenizedFile: $(Build.SourcesDirectory)/artifacts/monitoring/availability.bicepparam
+
+          - task: AzureCLI@2
+            displayName: Run Monitoring Bicep
+            inputs:
+                azureSubscription: $(FrontDoorAdoServiceConnection) 
+                addSpnToEnvironment: true
+                scriptType: bash
+                scriptLocation: inlineScript                  
+                inlineScript: |
+                    az config set bicep.use_binary_from_path=false
+                    az deployment group create \
+                      --resource-group ${{ parameters.frontDoorResourceGroupName }} \
+                      --template-file '$(Build.SourcesDirectory)/artifacts/monitoring/availability.bicep' \
+                      --parameters '$(Build.SourcesDirectory)/artifacts/monitoring/availability.bicepparam' \
+                      --verbose

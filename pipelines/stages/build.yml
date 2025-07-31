@@ -1,0 +1,78 @@
+stages:
+  - stage: Build
+    jobs:
+      - job: Init
+        displayName: Initialize
+        steps:
+          - task: NpmAuthenticate@0
+            inputs:
+              workingFile: $(Build.SourcesDirectory)/.npmrc
+            displayName: NPM Feed Authentication
+
+          - task: Cache@2
+            inputs:
+              key: $(npmCacheKey)
+              path: $(npmCachePath)
+            displayName: Cache npm packages
+
+          - script: |
+              npm ci
+            displayName: Install Dependencies
+
+      # - job: Test
+      #   dependsOn: Init
+      #   displayName: Test
+      #   steps:
+      #     - task: Cache@2
+      #       inputs:
+      #         key: $(npmCacheKey)
+      #         path: $(npmCachePath)
+      #       displayName: Cache npm packages
+
+      #     - script: |
+      #         npm run lint
+      #       displayName: 'Lint'
+
+      #     - script: |
+      #         npm run format
+      #       displayName: 'Format'
+
+      #     - script: |
+      #         npm run test-coverage
+      #       displayName: 'Test'
+
+      #     - task: PublishTestResults@2
+      #       inputs:
+      #         testResultsFiles: coverage/test-report.xml
+      #       displayName: 'Publish Test Results'
+
+      #     - task: PublishCodeCoverageResults@1
+      #       inputs:
+      #         codeCoverageTool: 'Cobertura'
+      #         summaryFileLocation: 'coverage/cobertura-coverage.xml'
+      #       displayName: 'Publish Code Coverage'
+
+      - job: Build
+        # dependsOn: Test        
+        dependsOn: Init
+        condition: succeeded()
+        steps:
+          - task: Cache@2
+            inputs:
+              key: $(npmCacheKey)
+              path: $(npmCachePath)
+            displayName: Cache npm packages
+
+          - script: |
+              npm run build --stage=$(EnvironmentShortName)
+            displayName: 'Build'
+
+          - task: CopyFiles@2
+            inputs:
+              Contents: $(buildOutputFolder)/**
+              TargetFolder: $(Build.ArtifactStagingDirectory)
+            displayName: 'Copy Build Output'
+            
+          - publish: $(Build.ArtifactStagingDirectory)/$(buildOutputFolder)
+            artifact: $(buildOutputFolder)
+            displayName: 'Publish Build Output'

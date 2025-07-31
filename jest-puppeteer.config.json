@@ -1,0 +1,7 @@
+{
+  "launch": {
+    "headless": true,
+    "args": ["--disable-infobars", "--no-sandbox", "--disable-setuid-sandbox"],
+    "timeout": 120000
+  }
+}

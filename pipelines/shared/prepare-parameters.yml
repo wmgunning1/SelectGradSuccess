@@ -1,0 +1,20 @@
+parameters:
+  - name: tokenizedFile
+    type: string
+
+steps:
+    - task: ReplaceTokens@5
+      displayName: 'Replace tokens in ${{ parameters.tokenizedFile }}'
+      inputs:
+        targetFiles: ${{ parameters.tokenizedFile }}
+        encoding: "auto"
+        writeBOM: true
+        verbosity: "detailed"
+        actionOnMissing: "warn"
+        keepToken: false
+        tokenPrefix: "#{"
+        tokenSuffix: "}#"
+
+    - bash: | 
+        cat  ${{ parameters.tokenizedFile }}
+      displayName: Log contents of ${{ parameters.tokenizedFile }}

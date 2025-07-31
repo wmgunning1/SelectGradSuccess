@@ -1,0 +1,27 @@
+stages:
+  - stage: E2E
+    displayName: 'e2e Test'
+    dependsOn: Deploy
+    condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+    pool: Linux Self-Hosted
+    jobs:
+      - job: e2e
+        steps:
+          - task: NpmAuthenticate@0
+            inputs:
+              workingFile: $(Build.SourcesDirectory)/.npmrc
+            displayName: NPM Feed Authentication
+
+          - script: |
+              sudo apt-get install npm -y
+              sudo apt-get install -y libgbm-dev libasound2
+              sudo npm install -g n
+              sudo n stable
+
+          - script: |
+              npm install jest jest-puppeteer puppeteer expect-puppeteer @testing-library/jest-dom @testing-library/react @testing-library/user-event @types/jest-environment-puppeteer
+            displayName: 'Install Dependencies'
+
+          - script: |
+              npm run test-e2e --url=https://$(WebHost)
+            displayName: 'E2E Test'

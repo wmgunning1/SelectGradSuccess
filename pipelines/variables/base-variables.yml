@@ -1,0 +1,17 @@
+variables:
+  - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/dev') }}:
+      - group: base-ui-dev
+  - ${{ elseif startsWith(variables['Build.SourceBranch'], 'refs/tags/dev') }}:
+      - group: base-ui-dev
+  - ${{ elseif startsWith(variables['Build.SourceBranch'], 'refs/tags/qa') }}:
+      - group: base-ui-qa
+  - ${{ elseif startsWith(variables['Build.SourceBranch'], 'refs/tags/uat') }}:
+      - group: base-ui-uat
+  - ${{ elseif startsWith(variables['Build.SourceBranch'], 'refs/tags/sbox') }}:
+      - group: base-ui-sbox
+  - ${{ elseif startsWith(variables['Build.SourceBranch'], 'refs/tags/prod') }}:
+      - group: base-ui-prod
+  - ${{ elseif eq(variables['Build.SourceBranch'], 'refs/heads/main') }}:
+      - group: base-ui-prod
+  - ${{ else }}:
+      - group: base-ui-dev

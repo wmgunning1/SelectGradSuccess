@@ -1,0 +1,13 @@
+import { clientsClaim } from 'workbox-core';
+import { cleanupOutdatedCaches, precacheAndRoute } from 'workbox-precaching';
+
+declare let self: ServiceWorkerGlobalScope;
+
+// self.__WB_MANIFEST is default injection point
+precacheAndRoute(self.__WB_MANIFEST);
+
+// clean old assets
+cleanupOutdatedCaches();
+
+self.skipWaiting();
+clientsClaim();

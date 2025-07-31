@@ -1,0 +1,275 @@
+/* Producer Detail Specific Styles */
+.producer-header {
+  padding: 1rem 2rem;
+  background: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.producer-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.producer-selector label {
+  font-weight: 600;
+  color: #374151;
+}
+
+.producer-selector select {
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 1rem;
+  min-width: 200px;
+}
+
+.producer-success-score {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+
+.producer-info {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.producer-info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(180px, 1fr));
+  grid-template-rows: repeat(2, auto);
+  gap: 1.5rem 2.5rem;
+  font-size: 1.1rem;
+  color: #6b7280;
+  font-weight: 400;
+}
+
+.producer-info-grid div {
+  display: flex;
+  align-items: center;
+}
+
+.producer-info-grid strong {
+  font-weight: 700;
+  margin-right: 0.5rem;
+  color: #374151;
+}
+
+.metrics-row {
+  display: flex;
+  padding: 1rem 2rem;
+  background: white;
+  border-bottom: 1px solid #e2e8f0;
+  align-items: center;
+  justify-content: space-evenly;
+  max-width: calc(100% - 4rem);
+  margin: 0 auto;
+}
+
+.metric-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  flex: 0 1 auto;
+  min-width: 120px;
+  max-width: 160px;
+}
+
+.metric-card.flags {
+  color: #dc2626;
+}
+
+.metric-label {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-bottom: 0.25rem;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.metric-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.flag-icon {
+  font-size: 2rem !important;
+  color: #dc2626 !important;
+}
+
+.percentile-display {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    #fbbf24 0deg,
+    #fbbf24 190deg,
+    #e5e7eb 190deg,
+    #e5e7eb 360deg
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.percentile-value {
+  background: white;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1rem;
+  color: #374151;
+}
+
+.details-container {
+  padding: 2rem;
+}
+
+.details-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.details-table th {
+  background: #f8fafc;
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: #374151;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 0.875rem;
+}
+
+.details-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #f3f4f6;
+  color: #374151;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+}
+
+.details-table tr {
+  transition: all 0.3s ease;
+}
+
+.details-table tr.collapsed {
+  opacity: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+/* Grayed out / disabled items */
+.details-table td[style*="color: #9ca3af"] {
+  color: #9ca3af !important;
+  font-style: italic;
+}
+
+/* Flag icon styling */
+.details-table td:last-child {
+  text-align: center;
+  font-size: 1.2rem;
+}
+
+.section-header td {
+  background: #f8fafc !important;
+  font-weight: 600;
+  color: #1e40af;
+  padding: 0.5rem 1rem;
+}
+
+.section-toggle {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  padding: 0.25rem 0;
+  transition: background-color 0.2s ease;
+}
+
+.section-toggle:hover {
+  background-color: #e5e7eb;
+  border-radius: 4px;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+.section-toggle span {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1e40af;
+}
+
+/* Score styling */
+.score-high {
+  color: #059669;
+  font-weight: 600;
+}
+
+.score-medium {
+  color: #d97706;
+  font-weight: 600;
+}
+
+.score-low {
+  color: #dc2626;
+  font-weight: 600;
+}
+
+.score-very-low {
+  color: #6b7280;
+  font-weight: 600;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .metrics-row {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  
+  .metric-card {
+    min-width: 100px;
+  }
+  
+  .producer-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .producer-info {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .details-table {
+    font-size: 0.75rem;
+  }
+  
+  .details-table th,
+  .details-table td {
+    padding: 0.5rem;
+  }
+}

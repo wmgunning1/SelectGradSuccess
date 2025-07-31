@@ -1,0 +1,5 @@
+- check the entire repository for consistency with the standards outlined in .github/instructions/\*.instructions.md files
+- do not make any changes to files
+- write a detailed report of any inconsistencies found
+- make a plan for addressing these inconsistencies
+- create a new file in .github/prompts/execute-standards-report.prompt.md with the report and plan

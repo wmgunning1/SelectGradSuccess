@@ -1,0 +1,41 @@
+stages:
+  - stage: FrontDoor
+    displayName: 'Front Door Setup'
+    dependsOn: Swa
+    condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+    jobs:
+      - job: FrontDoor_1
+        variables:
+          SwaHostName: $[ stageDependencies.Swa.Swa_1.outputs['RetrieveSwaVars.SwaHostName'] ]
+        displayName: 'Front Door Setup'
+        steps:
+          - template: ../shared/prepare-parameters.yml
+            parameters: 
+                tokenizedFile: $(Build.SourcesDirectory)/artifacts/frontdoor/frontdoor.bicepparam
+
+          - task: AzureCLI@2
+            displayName: Run Front Door Setup Bicep
+            inputs:
+                azureSubscription: $(FrontDoorAdoServiceConnection)
+                addSpnToEnvironment: true
+                scriptType: bash
+                scriptLocation: inlineScript                  
+                inlineScript: |
+                    az config set bicep.use_binary_from_path=false
+                    az deployment group create \
+                      --resource-group $(FrontDoorResourceGroupName) \
+                      --template-file '$(Build.SourcesDirectory)/artifacts/frontdoor/frontdoor.bicep' \
+                      --parameters '$(Build.SourcesDirectory)/artifacts/frontdoor/frontdoor.bicepparam' \
+                      --verbose 
+
+          - task: AzureCLI@2
+            name: RetrieveFrontDoorId
+            inputs:
+                azureSubscription: $(FrontDoorAdoServiceConnection)
+                addSpnToEnvironment: true
+                scriptType: bash
+                scriptLocation: inlineScript                  
+                displayName: 'Retrieve Front Door Id'
+                inlineScript: |
+                    frontDoorId=$(az afd profile show --name utech-app-frontend-$(EnvironmentShortName)-frontdoorprofile --resource-group $(FrontDoorResourceGroupName) --query "frontDoorId" --output tsv)
+                    echo "##vso[task.setvariable variable=FrontDoorId;isSecure=true;isOutput=true]$frontDoorId"

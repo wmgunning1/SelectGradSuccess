@@ -1,0 +1,42 @@
+stages:
+  - stage: Swa
+    displayName: 'Static Web Site Setup'
+    dependsOn: Build
+    condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+    jobs:
+      - job: Swa_1
+        displayName: 'Static Web Site Setup'
+        steps:
+          - template: ../shared/prepare-parameters.yml
+            parameters: 
+                tokenizedFile: $(Build.SourcesDirectory)/artifacts/swa/swa.bicepparam
+
+          - task: AzureCLI@2
+            displayName: Run SWA Setup Bicep
+            inputs:
+                azureSubscription: $(SwaAdoServiceConnection)
+                addSpnToEnvironment: true
+                scriptType: bash
+                scriptLocation: inlineScript                  
+                inlineScript: |
+                    az config set bicep.use_binary_from_path=false
+                    az deployment group create \
+                      --resource-group $(SwaResourceGroupName) \
+                      --template-file '$(Build.SourcesDirectory)/artifacts/swa/swa.bicep' \
+                      --parameters '$(Build.SourcesDirectory)/artifacts/swa/swa.bicepparam' \
+                      --verbose 
+                      
+          - task: AzureCLI@2
+            name: RetrieveSwaVars
+            displayName: Set Output Variables
+            inputs:
+                azureSubscription: $(SwaAdoServiceConnection)
+                addSpnToEnvironment: true
+                scriptType: bash
+                scriptLocation: inlineScript                  
+                displayName: 'Retrieve Api Key'
+                inlineScript: |
+                    apiKey=$(az staticwebapp secrets list --name swa-$(ApplicationName)-$(EnvironmentShortName) --query "properties.apiKey" --output tsv)
+                    echo "##vso[task.setvariable variable=ApiToken;isSecure=true;isOutput=true]$apiKey"
+                    swaHostName=$(az staticwebapp show --name swa-$(ApplicationName)-$(EnvironmentShortName) --query "defaultHostname" --output tsv)  
+                    echo "##vso[task.setvariable variable=SwaHostName;isOutput=true]$swaHostName"

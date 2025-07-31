@@ -1,0 +1,24 @@
+variables:
+  - name: buildOutputFolder
+    value: 'dist'
+  - name: npmCacheKey
+    value: 'npm | "$(Agent.OS)" | $(Build.SourcesDirectory)/package-lock.json'
+  - name: npmCachePath
+    value: $(Build.SourcesDirectory)/node_modules
+
+  # The friendly name of the application
+  - name: ApplicationName
+    value: 'react-base'
+
+  # The short name of the application. Used in resource names with length limits.
+  - name: ApplicationShortName
+    value: 'react-base'
+
+  # E-mail address for notifications on alerts
+  - name: ActionGroupRecipientListEmailAddress
+    value: 'utech-architecture-leads@usi.com' 
+
+  # The path to the application off the utech root domain
+  - name: ApplicationPath
+    value: 'react-base'
+

@@ -1,0 +1,118 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "es6": true,
+    "jest": true
+  },
+  "globals": {
+    "page": true,
+    "browser": true,
+    "context": true,
+    "jestPuppeteer": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "airbnb/hooks",
+    "airbnb-typescript",
+    "plugin:react/recommended",
+    "plugin:react/jsx-runtime",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking",
+    "plugin:prettier/recommended",
+    "plugin:import/recommended",
+    "plugin:jsx-a11y/strict",
+    "prettier"
+  ],
+  "ignorePatterns": [
+    "**/_test/*",
+    "**/*.test.*",
+    "/vite.config.ts",
+    "/src/setupTests.ts",
+    "/src/sw.ts",
+    "/vite-env.d.ts",
+    "/src/reportWebVitals.ts",
+    "/manifest.ts",
+    "**/mocks/**",
+    "src/services/**/*Api*.ts"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": "latest",
+    "sourceType": "module",
+    "tsconfigRootDir": ".",
+    "project": ["./tsconfig.json"]
+  },
+  "overrides": [],
+  "settings": {
+    "react": {
+      "version": "detect" // Tells eslint-plugin-react to automatically detect the version of React to use
+    },
+    "import/resolver": {
+      "typescript": {
+        "project": "./tsconfig.json"
+      }
+    }
+  },
+  "plugins": ["react", "@typescript-eslint", "jsx-a11y", "prettier"],
+  "rules": {
+    "linebreak-style": "off",
+    "quotes": [
+      "error",
+      "single",
+      {
+        "avoidEscape": true
+      }
+    ],
+    // Configure prettier
+    "prettier/prettier": [
+      "error",
+      {
+        "printWidth": 120,
+        "endOfLine": "auto",
+        "singleQuote": true,
+        "tabWidth": 2,
+        "useTabs": false,
+        "trailingComma": "all",
+        "semi": true,
+        "importOrder": [
+          "^(^react$|@react|react|^recoil$)",
+          "^@mui/(.*)$",
+          "<THIRD_PARTY_MODULES>",
+          "^@/(.*)$",
+          "^[./]"
+        ],
+        "importOrderGroupNamespaceSpecifiers": true,
+        "importOrderSeparation": true,
+        "importOrderSortSpecifiers": true
+      },
+      {
+        "usePrettierrc": false
+      }
+    ],
+    // Disallow the `any` type.
+    "@typescript-eslint/no-explicit-any": "warn",
+    "@typescript-eslint/ban-types": [
+      "error",
+      {
+        "extendDefaults": true,
+        "types": {
+          "{}": false
+        }
+      }
+    ],
+    "react-hooks/exhaustive-deps": "off",
+    // Enforce the use of the shorthand syntax.
+    "object-shorthand": "error",
+    "no-console": "warn",
+    "@typescript-eslint/ban-ts-comment": "off",
+    "@typescript-eslint/no-unsafe-assignment": "off",
+    "@typescript-eslint/no-unsafe-call": "off",
+    "@typescript-eslint/no-unsafe-member-access": "off",
+    "@typescript-eslint/restrict-template-expressions": "off",
+    "@typescript-eslint/no-unsafe-return": "off"
+  }
+}
