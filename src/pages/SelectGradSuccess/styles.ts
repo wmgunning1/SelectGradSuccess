@@ -39,13 +39,14 @@ export const heroSection: SxProps<Theme> = {
 
 export const utechLogo: SxProps<Theme> = {
   height: 'auto',
-  width: '200px',
+  width: '240px',
   maxWidth: '100%',
   mb: 4,
-  filter: 'brightness(1.1) contrast(1.1)',
+  filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.2))',
   transition: 'all 0.3s ease',
   '&:hover': {
     transform: 'scale(1.05)',
+    filter: 'drop-shadow(0 6px 12px rgba(0,0,0,0.3))',
   },
 };
 
@@ -111,7 +112,7 @@ export const navButton: SxProps<Theme> = {
   textTransform: 'none',
   position: 'relative',
   overflow: 'hidden',
-  
+
   // Primary button (contained)
   '&.MuiButton-contained': {
     background: 'linear-gradient(135deg, #1e40af 0%, #3b82f6 100%)',
@@ -123,7 +124,7 @@ export const navButton: SxProps<Theme> = {
       boxShadow: '0 12px 35px rgba(59, 130, 246, 0.6)',
     },
   },
-  
+
   // Secondary button (outlined)
   '&.MuiButton-outlined': {
     borderColor: 'rgba(255, 255, 255, 0.3)',
@@ -137,7 +138,7 @@ export const navButton: SxProps<Theme> = {
       boxShadow: '0 8px 25px rgba(0,0,0,0.2)',
     },
   },
-  
+
   // Text button
   '&.MuiButton-text': {
     color: 'rgba(255, 255, 255, 0.8)',

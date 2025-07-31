@@ -41,12 +41,17 @@ const SelectGradSuccessComponent = () => {
     <Box sx={dashboardContainer}>
       {/* Background with gradient and overlay */}
       <Box sx={backgroundOverlay} />
-      
+
       {/* Hero Section */}
       <Container maxWidth="lg" sx={heroSection}>
         {/* UTECH Logo */}
-        <Box component="img" src="/assets/logo/utech/utech-256x78.png" alt="UTECH" sx={utechLogo} />
-        
+        <Box
+          component="img"
+          src="/assets/logo/utech/utech-logo-primary.svg"
+          alt="UTECH - Brought to you by USI"
+          sx={utechLogo}
+        />
+
         {/* Main Title and Subtitle */}
         <Typography variant="h1" sx={dashboardTitle}>
           Select Graduate Success Tools
@@ -71,7 +76,7 @@ const SelectGradSuccessComponent = () => {
               </CardContent>
             </Card>
           </Grid>
-          
+
           <Grid item xs={12} md={6} lg={3}>
             <Card sx={featureCard}>
               <CardContent sx={{ textAlign: 'center', p: 3 }}>
@@ -85,7 +90,7 @@ const SelectGradSuccessComponent = () => {
               </CardContent>
             </Card>
           </Grid>
-          
+
           <Grid item xs={12} md={6} lg={3}>
             <Card sx={featureCard}>
               <CardContent sx={{ textAlign: 'center', p: 3 }}>
@@ -99,7 +104,7 @@ const SelectGradSuccessComponent = () => {
               </CardContent>
             </Card>
           </Grid>
-          
+
           <Grid item xs={12} md={6} lg={3}>
             <Card sx={featureCard}>
               <CardContent sx={{ textAlign: 'center', p: 3 }}>
