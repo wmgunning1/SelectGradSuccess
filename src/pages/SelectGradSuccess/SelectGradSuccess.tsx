@@ -64,7 +64,7 @@ const SelectGradSuccessComponent = () => {
         {/* Feature Cards Grid */}
         <Grid container spacing={3} sx={{ mt: 4, mb: 6 }}>
           <Grid item xs={12} md={6} lg={3}>
-            <Card sx={featureCard}>
+            <Card sx={featureCard} onClick={handleNavigateToPredictor}>
               <CardContent sx={{ textAlign: 'center', p: 3 }}>
                 <Assessment sx={featureIcon} />
                 <Typography variant="h6" sx={{ mt: 2, mb: 1, color: '#1e3a8a' }}>
@@ -78,7 +78,7 @@ const SelectGradSuccessComponent = () => {
           </Grid>
 
           <Grid item xs={12} md={6} lg={3}>
-            <Card sx={featureCard}>
+            <Card sx={featureCard} onClick={handleNavigateToTable}>
               <CardContent sx={{ textAlign: 'center', p: 3 }}>
                 <Dashboard sx={featureIcon} />
                 <Typography variant="h6" sx={{ mt: 2, mb: 1, color: '#1e3a8a' }}>
@@ -92,7 +92,7 @@ const SelectGradSuccessComponent = () => {
           </Grid>
 
           <Grid item xs={12} md={6} lg={3}>
-            <Card sx={featureCard}>
+            <Card sx={featureCard} onClick={handleNavigateToPredictor}>
               <CardContent sx={{ textAlign: 'center', p: 3 }}>
                 <Business sx={featureIcon} />
                 <Typography variant="h6" sx={{ mt: 2, mb: 1, color: '#1e3a8a' }}>
@@ -106,7 +106,7 @@ const SelectGradSuccessComponent = () => {
           </Grid>
 
           <Grid item xs={12} md={6} lg={3}>
-            <Card sx={featureCard}>
+            <Card sx={featureCard} onClick={handleNavigateToSharePoint}>
               <CardContent sx={{ textAlign: 'center', p: 3 }}>
                 <CloudUpload sx={featureIcon} />
                 <Typography variant="h6" sx={{ mt: 2, mb: 1, color: '#1e3a8a' }}>

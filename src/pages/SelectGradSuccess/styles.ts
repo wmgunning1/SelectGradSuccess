@@ -78,10 +78,18 @@ export const featureCard: SxProps<Theme> = {
   background: 'rgba(255, 255, 255, 0.95)',
   backdropFilter: 'blur(10px)',
   transition: 'all 0.3s ease',
+  cursor: 'pointer',
   '&:hover': {
     transform: 'translateY(-8px)',
     boxShadow: '0 20px 40px rgba(0,0,0,0.2)',
     background: 'rgba(255, 255, 255, 1)',
+    '& .MuiSvgIcon-root': {
+      transform: 'scale(1.1)',
+      color: '#2563eb',
+    },
+  },
+  '&:active': {
+    transform: 'translateY(-4px)',
   },
 };
 
