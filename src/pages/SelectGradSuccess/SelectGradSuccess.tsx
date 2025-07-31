@@ -67,7 +67,7 @@ const SelectGradSuccessComponent = () => {
         {/* UTECH Logo */}
         <Box
           component="img"
-          src="/assets/logo/utech/utech-logo-primary.svg"
+          src="/react-base/assets/logo/utech/utech-logo-primary.svg"
           alt="UTECH - Brought to you by USI"
           sx={utechLogo}
         />
