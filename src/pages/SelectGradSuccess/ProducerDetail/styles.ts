@@ -6,6 +6,7 @@ export const detailContainer: SxProps<Theme> = {
   margin: 2,
   borderRadius: 3,
   boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+  position: 'relative',
 };
 
 export const headerContainer: SxProps<Theme> = {
@@ -19,7 +20,11 @@ export const headerContainer: SxProps<Theme> = {
 
 export const navigationButtons: SxProps<Theme> = {
   display: 'flex',
-  gap: 2,
+  gap: 1,
+  position: 'absolute',
+  top: 32,
+  right: 32,
+  zIndex: 10,
 };
 
 export const loadingContainer: SxProps<Theme> = {

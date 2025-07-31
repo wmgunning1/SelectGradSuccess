@@ -156,3 +156,10 @@ export const navButton: SxProps<Theme> = {
     },
   },
 };
+
+export const topNavigation: SxProps<Theme> = {
+  position: 'absolute',
+  top: 32,
+  right: 32,
+  zIndex: 10,
+};

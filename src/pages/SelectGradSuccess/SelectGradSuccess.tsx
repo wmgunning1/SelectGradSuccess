@@ -15,6 +15,7 @@ import {
   featureIcon,
   heroSection,
   navButton,
+  topNavigation,
   utechLogo,
 } from './styles';
 
@@ -42,6 +43,25 @@ const SelectGradSuccessComponent = () => {
       {/* Background with gradient and overlay */}
       <Box sx={backgroundOverlay} />
 
+      {/* Top Navigation */}
+      <Box sx={topNavigation}>
+        <Button
+          variant="outlined"
+          size="small"
+          onClick={handleNavigateToHome}
+          sx={{
+            color: 'white',
+            borderColor: 'rgba(255, 255, 255, 0.3)',
+            '&:hover': {
+              borderColor: 'rgba(255, 255, 255, 0.6)',
+              backgroundColor: 'rgba(255, 255, 255, 0.1)',
+            },
+          }}
+        >
+          ← Back to Home
+        </Button>
+      </Box>
+
       {/* Hero Section */}
       <Container maxWidth="lg" sx={heroSection}>
         {/* UTECH Logo */}
@@ -64,6 +84,20 @@ const SelectGradSuccessComponent = () => {
         {/* Feature Cards Grid */}
         <Grid container spacing={3} sx={{ mt: 4, mb: 6 }}>
           <Grid item xs={12} md={6} lg={3}>
+            <Card sx={featureCard} onClick={handleNavigateToTable}>
+              <CardContent sx={{ textAlign: 'center', p: 3 }}>
+                <Dashboard sx={featureIcon} />
+                <Typography variant="h6" sx={{ mt: 2, mb: 1, color: '#1e3a8a' }}>
+                  Producer Summary
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Compare producers at the region or office level. Identify grads at risk of failing or leaving USI
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+
+          <Grid item xs={12} md={6} lg={3}>
             <Card sx={featureCard} onClick={handleNavigateToPredictor}>
               <CardContent sx={{ textAlign: 'center', p: 3 }}>
                 <Assessment sx={featureIcon} />
@@ -72,20 +106,6 @@ const SelectGradSuccessComponent = () => {
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
                   Analyze producer performance metrics and predict success outcomes
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={3}>
-            <Card sx={featureCard} onClick={handleNavigateToTable}>
-              <CardContent sx={{ textAlign: 'center', p: 3 }}>
-                <Dashboard sx={featureIcon} />
-                <Typography variant="h6" sx={{ mt: 2, mb: 1, color: '#1e3a8a' }}>
-                  Performance Dashboard
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Compare producers against market metrics and benchmarks
                 </Typography>
               </CardContent>
             </Card>
@@ -129,16 +149,12 @@ const SelectGradSuccessComponent = () => {
 
           <Button sx={navButton} onClick={handleNavigateToTable} variant="outlined" size="large">
             <Dashboard sx={{ mr: 1 }} />
-            Performance Dashboard
+            Producer Summary
           </Button>
 
           <Button sx={navButton} onClick={handleNavigateToSharePoint} variant="outlined" size="large">
             <CloudUpload sx={{ mr: 1 }} />
             SharePoint Integration
-          </Button>
-
-          <Button sx={navButton} onClick={handleNavigateToHome} variant="text" size="large">
-            ← Back to Home
           </Button>
         </Box>
       </Container>

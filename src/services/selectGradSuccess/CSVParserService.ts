@@ -131,25 +131,25 @@ export class CSVParserService {
         numberOfWinsWeighting: 7, // 7%
         medianWinSizeWeighting: 7, // 7%
         // Poaching Risks fields (from CSV columns)
-        splitWins: values[57] || '0', // Number Split Wins
-        currentBaseSalaryRelativeToNB: values[65] || '0%', // SGNB to Expected NB
-        currentBaseSalaryRelativeToBV: values[63] || '0%', // SGBV to Expected BV
+        splitWins: values[63] || '0', // Number Split Wins
+        currentBaseSalaryRelativeToNB: values[75] || '0%', // SGNB to Expected NB
+        currentBaseSalaryRelativeToBV: values[73] || '0%', // SGBV to Expected BV
         deltaLeadershipLTM: 'Stable', // Default value (not in CSV)
         commutingDistance: 'Normal', // Default value (not in CSV)
         moveFromPrimaryOffice: 'No', // Default value (not in CSV)
         // Other Factors fields (from CSV columns)
-        pipHistory: values[59] || '0', // PIP History
-        ccat: values[61] || 'No Criteria Data', // CCAT
-        epp: values[63] || 'No Criteria Data', // EPP
-        illustrate: values[65] || 'No Criteria Data', // Illustrate
+        pipHistory: values[65] || '0', // PIP History
+        ccat: values[67] || 'No Criteria Data', // CCAT
+        epp: values[69] || 'No Criteria Data', // EPP
+        illustrate: values[71] || 'No Criteria Data', // Illustrate
         // Flag values (Y/N from CSV)
-        partnersWhoPairUpFlag: values[58] || 'N', // Partners Who Pair Up Flag
-        pipFlag: values[60] || 'N', // PIP Flag
-        ccatFlag: values[62] || 'N', // CCAT Flag
-        eppFlag: values[64] || 'N', // EPP Flag
-        illustrateFlag: values[66] || 'N', // Illustrate Flag
-        baseSalaryTooLowRelativeToBVFlag: values[68] || 'N', // Base Salary too low Relative to BV Flag
-        baseSalaryTooLowRelativeToNBFlag: values[70] || 'N', // Base Salary too low Relative to NB Flag
+        partnersWhoPairUpFlag: values[64] || 'N', // Partners Who Pair Up Flag
+        pipFlag: values[66] || 'N', // PIP Flag
+        ccatFlag: values[68] || 'N', // CCAT Flag
+        eppFlag: values[70] || 'N', // EPP Flag
+        illustrateFlag: values[72] || 'N', // Illustrate Flag
+        baseSalaryTooLowRelativeToBVFlag: values[74] || 'N', // Base Salary too low Relative to BV Flag
+        baseSalaryTooLowRelativeToNBFlag: values[76] || 'N', // Base Salary too low Relative to NB Flag
       };
 
       producers.push(producer);
@@ -188,14 +188,14 @@ export class CSVParserService {
       if (char === '"') {
         inQuotes = !inQuotes;
       } else if (char === ',' && !inQuotes) {
-        result.push(current.trim());
+        result.push(current.trim().replace(/^"(.*)"$/, '$1')); // Remove surrounding quotes
         current = '';
       } else {
         current += char;
       }
     }
 
-    result.push(current.trim());
+    result.push(current.trim().replace(/^"(.*)"$/, '$1')); // Remove surrounding quotes from last field
     return result;
   }
 

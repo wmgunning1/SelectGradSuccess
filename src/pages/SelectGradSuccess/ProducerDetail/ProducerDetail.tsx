@@ -211,6 +211,19 @@ const ProducerDetailComponent = () => {
 
   return (
     <Box sx={detailContainer}>
+      {/* Navigation Buttons - Top Right */}
+      <Box sx={navigationButtons}>
+        <Button variant="outlined" size="small" onClick={() => navigate('/')}>
+          Home
+        </Button>
+        <Button variant="outlined" size="small" onClick={() => navigate('/select-grad-success')}>
+          Dashboard
+        </Button>
+        <Button variant="outlined" size="small" onClick={() => navigate('/select-grad-success/predictor')}>
+          Back to Predictor
+        </Button>
+      </Box>
+
       {/* Header with producer selector */}
       <Box sx={producerSelectorContainer}>
         <Typography variant="h5" gutterBottom>
@@ -677,19 +690,6 @@ const ProducerDetailComponent = () => {
             </TableBody>
           </Table>
         </TableContainer>
-      </Box>
-
-      {/* Navigation Buttons */}
-      <Box sx={navigationButtons}>
-        <Button variant="outlined" onClick={() => navigate('/')}>
-          Home
-        </Button>
-        <Button variant="outlined" onClick={() => navigate('/select-grad-success')}>
-          Dashboard
-        </Button>
-        <Button variant="outlined" onClick={() => navigate('/select-grad-success/predictor')}>
-          Back to Predictor
-        </Button>
       </Box>
     </Box>
   );
