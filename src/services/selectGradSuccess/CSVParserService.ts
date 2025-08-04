@@ -131,26 +131,45 @@ export class CSVParserService {
         numberOfWinsWeighting: 7, // 7%
         medianWinSizeWeighting: 7, // 7%
         // Poaching Risks fields (from CSV columns)
-        splitWins: values[63] || '0', // Number Split Wins
-        currentBaseSalaryRelativeToNB: values[75] || '0%', // SGNB to Expected NB
-        currentBaseSalaryRelativeToBV: values[73] || '0%', // SGBV to Expected BV
+        splitWins: values[58] || '0', // Number Split Wins (column 58)
+        currentBaseSalaryRelativeToNB: values[70] || '0%', // SGNB to Expected NB (column 70)
+        currentBaseSalaryRelativeToBV: values[68] || '0%', // SGBV to Expected BV (column 68)
         deltaLeadershipLTM: 'Stable', // Default value (not in CSV)
         commutingDistance: 'Normal', // Default value (not in CSV)
         moveFromPrimaryOffice: 'No', // Default value (not in CSV)
         // Other Factors fields (from CSV columns)
-        pipHistory: values[65] || '0', // PIP History
-        ccat: values[67] || 'No Criteria Data', // CCAT
-        epp: values[69] || 'No Criteria Data', // EPP
-        illustrate: values[71] || 'No Criteria Data', // Illustrate
+        pipHistory: values[60] || '0', // PIP History (column 60)
+        ccat: values[62] || 'No Criteria Data', // CCAT (column 62)
+        epp: values[64] || 'No Criteria Data', // EPP (column 64)
+        illustrate: values[66] || 'No Criteria Data', // Illustrate (column 66)
         // Flag values (Y/N from CSV)
-        partnersWhoPairUpFlag: values[64] || 'N', // Partners Who Pair Up Flag
-        pipFlag: values[66] || 'N', // PIP Flag
-        ccatFlag: values[68] || 'N', // CCAT Flag
-        eppFlag: values[70] || 'N', // EPP Flag
-        illustrateFlag: values[72] || 'N', // Illustrate Flag
-        baseSalaryTooLowRelativeToBVFlag: values[74] || 'N', // Base Salary too low Relative to BV Flag
-        baseSalaryTooLowRelativeToNBFlag: values[76] || 'N', // Base Salary too low Relative to NB Flag
+        splitWinsFlag: values[58] || 'N', // Number Split Wins Flag (column 58)
+        partnersWhoPairUpFlag: values[59] || 'N', // Partners Who Pair Up Flag (column 59)
+        baseSalaryTooLowRelativeToNBFlag: values[71] || 'N', // Base Salary too low Relative to NB Flag (column 71)
+        baseSalaryTooLowRelativeToBVFlag: values[69] || 'N', // Base Salary too low Relative to BV Flag (column 69)
+        deltaLeadershipLTMFlag: values[77] || 'N', // Delta Leadership LTM Flag (column 77 - needs verification)
+        commutingDistanceFlag: values[78] || 'N', // Commuting Distance Flag (column 78 - needs verification)
+        moveFromPrimaryOfficeFlag: values[79] || 'N', // Move from Primary Office Flag (column 79 - needs verification)
+        pipFlag: values[61] || 'N', // PIP Flag (column 61)
+        ccatFlag: values[63] || 'N', // CCAT Flag (column 63)
+        eppFlag: values[65] || 'N', // EPP Flag (column 65)
+        illustrateFlag: values[67] || 'N', // Illustrate Flag (column 67)
       };
+
+      // Debug logging for Dan Olsen specifically
+      if (producer.fullName === 'Dan Olsen' || producer.fullName?.includes('Dan')) {
+        // eslint-disable-next-line no-console
+        console.log('Dan Olsen flag values:', {
+          pipFlag: producer.pipFlag,
+          ccatFlag: producer.ccatFlag,
+          eppFlag: producer.eppFlag,
+          illustrateFlag: producer.illustrateFlag,
+          rawValues66: values[66],
+          rawValues68: values[68],
+          rawValues70: values[70],
+          rawValues72: values[72],
+        });
+      }
 
       producers.push(producer);
     }
@@ -169,6 +188,7 @@ export class CSVParserService {
       successScore: producer.successScore,
       flags: producer.numberOfFlags,
       region: producer.region,
+      office: producer.office,
       lob: producer.lob,
     }));
   }

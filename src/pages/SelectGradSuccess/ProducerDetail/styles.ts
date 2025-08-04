@@ -52,20 +52,14 @@ export const infoCard: SxProps<Theme> = {
 
 export const successScoreHigh: SxProps<Theme> = {
   color: '#388e3c',
-  fontWeight: 'bold',
-  fontSize: '1.5rem',
 };
 
 export const successScoreMedium: SxProps<Theme> = {
   color: '#f57c00',
-  fontWeight: 'bold',
-  fontSize: '1.5rem',
 };
 
 export const successScoreLow: SxProps<Theme> = {
   color: '#d32f2f',
-  fontWeight: 'bold',
-  fontSize: '1.5rem',
 };
 
 export const metricItem: SxProps<Theme> = {

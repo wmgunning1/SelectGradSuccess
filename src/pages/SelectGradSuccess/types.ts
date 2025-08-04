@@ -83,13 +83,17 @@ export interface Producer {
   epp: string;
   illustrate: string;
   // Flag fields (Y/N values from CSV)
+  splitWinsFlag: string;
   partnersWhoPairUpFlag: string;
+  baseSalaryTooLowRelativeToNBFlag: string;
+  baseSalaryTooLowRelativeToBVFlag: string;
+  deltaLeadershipLTMFlag: string;
+  commutingDistanceFlag: string;
+  moveFromPrimaryOfficeFlag: string;
   pipFlag: string;
   ccatFlag: string;
   eppFlag: string;
   illustrateFlag: string;
-  baseSalaryTooLowRelativeToBVFlag: string;
-  baseSalaryTooLowRelativeToNBFlag: string;
 }
 
 // Summary interface for table display
@@ -103,6 +107,7 @@ export interface ProducerSummary {
   successScore: number;
   flags: number;
   region: string;
+  office: string;
   lob: string;
 }
 

@@ -23,7 +23,7 @@ const SelectGradSuccessComponent = () => {
   const navigate = useNavigate();
 
   const handleNavigateToHome = () => {
-    navigate('/');
+    navigate('/select-grad-success');
   };
 
   const handleNavigateToPredictor = () => {
@@ -76,7 +76,7 @@ const SelectGradSuccessComponent = () => {
 
         {/* Main Title and Subtitle */}
         <Typography variant="h1" sx={dashboardTitle}>
-          Select Graduate Success Tools
+          Select Grad Success Predictor
         </Typography>
         <Typography sx={dashboardSubtitle}>
           Empowering USI Account Managers & Leaders to explore role expectations, assess competencies, and plan for

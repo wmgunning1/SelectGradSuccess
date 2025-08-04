@@ -24,7 +24,7 @@ import {
 import MainLayout from '@/layout/MainLayout';
 import { CSVParserService } from '@/services/selectGradSuccess/CSVParserService';
 
-import { ColumnFilters, ConnectionMethod, Producer, ProducerSummary, SortConfig } from '../types';
+import { ColumnFilters, Producer, ProducerSummary, SortConfig } from '../types';
 import {
   errorContainer,
   filtersContainer,
@@ -43,9 +43,9 @@ const PredictorComponent = () => {
   const [allProducerData, setAllProducerData] = useState<Producer[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [connectionMethod, setConnectionMethod] = useState<ConnectionMethod>('csv');
   const [lineOfBusiness, setLineOfBusiness] = useState('All');
   const [region, setRegion] = useState('All Regions');
+  const [office, setOffice] = useState('All Offices');
 
   // Column sorting and filtering state
   const [sortConfig, setSortConfig] = useState<SortConfig | null>({ key: 'successScore', direction: 'asc' });
@@ -67,6 +67,17 @@ const PredictorComponent = () => {
     ],
     [allProducerData],
   );
+
+  const uniqueOffices = useMemo(() => {
+    // If a specific region is selected, only show offices from that region
+    const filteredData =
+      region === 'All Regions' ? allProducerData : allProducerData.filter((p) => p.region === region);
+
+    return [
+      'All Offices',
+      ...Array.from(new Set(filteredData.map((p) => p.office).filter((o) => o && o.trim() !== ''))),
+    ];
+  }, [allProducerData, region]);
 
   const uniqueLOBs = useMemo(
     () => [
@@ -90,7 +101,6 @@ const PredictorComponent = () => {
 
       setAllProducerData(producerData);
       setProducers(producerSummaries);
-      setConnectionMethod('csv');
     } catch (loadError) {
       setError('Failed to load producer data from CSV file');
     } finally {
@@ -103,12 +113,19 @@ const PredictorComponent = () => {
     void loadCSVData();
   }, []);
 
+  // Reset office selection when region changes
+  useEffect(() => {
+    // Reset office to "All Offices" when region changes
+    setOffice('All Offices');
+  }, [region]);
+
   // Filter and sort producers
   const filteredAndSortedProducers = useMemo(() => {
     const filtered = producers.filter((producer) => {
-      // Apply LOB and Region filters
+      // Apply LOB, Region, and Office filters
       const lobMatch = lineOfBusiness === 'All' || producer.lob === lineOfBusiness;
       const regionMatch = region === 'All Regions' || producer.region === region;
+      const officeMatch = office === 'All Offices' || producer.office === office;
 
       // Apply column filters
       const columnMatch = Object.entries(columnFilters).every(([key, filterValue]) => {
@@ -117,7 +134,7 @@ const PredictorComponent = () => {
         return producerValue.includes(filterValue.toLowerCase());
       });
 
-      return lobMatch && regionMatch && columnMatch;
+      return lobMatch && regionMatch && officeMatch && columnMatch;
     });
 
     // Apply sorting
@@ -141,7 +158,7 @@ const PredictorComponent = () => {
     }
 
     return filtered;
-  }, [producers, lineOfBusiness, region, columnFilters, sortConfig]);
+  }, [producers, lineOfBusiness, region, office, columnFilters, sortConfig]);
 
   const handleSort = (key: string) => {
     setSortConfig((prevConfig) => {
@@ -202,29 +219,10 @@ const PredictorComponent = () => {
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
         <Typography variant="h4">Select Grad Success Predictor</Typography>
         <Box sx={{ display: 'flex', gap: 2 }}>
-          <Button variant="outlined" onClick={() => navigate('/')}>
-            Home
-          </Button>
           <Button variant="outlined" onClick={() => navigate('/select-grad-success')}>
-            Back to Dashboard
+            Back to Home
           </Button>
         </Box>
-      </Box>
-
-      {/* Connection Method Selection */}
-      <Box sx={filtersContainer}>
-        <FormControl size="small">
-          <InputLabel>Data Source</InputLabel>
-          <Select
-            value={connectionMethod}
-            label="Data Source"
-            onChange={(e: SelectChangeEvent) => setConnectionMethod(e.target.value as ConnectionMethod)}
-          >
-            <MenuItem value="csv">CSV File</MenuItem>
-            <MenuItem value="sharepoint">SharePoint</MenuItem>
-            <MenuItem value="manual">Manual Entry</MenuItem>
-          </Select>
-        </FormControl>
       </Box>
 
       {/* Filters */}
@@ -250,6 +248,17 @@ const PredictorComponent = () => {
             {uniqueRegions.map((reg) => (
               <MenuItem key={reg} value={reg}>
                 {reg}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        <FormControl size="small" sx={{ minWidth: 200 }}>
+          <InputLabel>Office</InputLabel>
+          <Select value={office} label="Office" onChange={(e: SelectChangeEvent) => setOffice(e.target.value)}>
+            {uniqueOffices.map((off) => (
+              <MenuItem key={off} value={off}>
+                {off}
               </MenuItem>
             ))}
           </Select>

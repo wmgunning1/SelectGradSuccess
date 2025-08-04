@@ -57,15 +57,12 @@ export const tableRow: SxProps<Theme> = {
 
 export const successScoreLow: SxProps<Theme> = {
   color: '#d32f2f',
-  fontWeight: 'bold',
 };
 
 export const successScoreMedium: SxProps<Theme> = {
   color: '#f57c00',
-  fontWeight: 'bold',
 };
 
 export const successScoreHigh: SxProps<Theme> = {
   color: '#388e3c',
-  fontWeight: 'bold',
 };

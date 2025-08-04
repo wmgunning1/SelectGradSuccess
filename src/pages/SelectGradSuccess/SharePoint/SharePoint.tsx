@@ -10,12 +10,12 @@ const SharePointComponent = () => {
   return (
     <Box sx={{ p: 4 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <Typography variant="h4">SharePoint Integration</Typography>
+        <Typography variant="h4">Select Grad Success Predictor</Typography>
         <Box sx={{ display: 'flex', gap: 2 }}>
-          <Button variant="outlined" onClick={() => navigate('/')}>
+          <Button variant="outlined" onClick={() => navigate('/select-grad-success')}>
             Home
           </Button>
-          <Button variant="outlined" onClick={() => navigate('/select-grad-success')}>
+          <Button variant="outlined" onClick={() => navigate('/select-grad-success/predictor')}>
             Back to Dashboard
           </Button>
         </Box>

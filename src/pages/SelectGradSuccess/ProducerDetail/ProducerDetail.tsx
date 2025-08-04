@@ -20,6 +20,8 @@ import {
   Typography,
 } from '@mui/material';
 
+import { ResponsivePie } from '@nivo/pie';
+
 import MainLayout from '@/layout/MainLayout';
 import { CSVParserService } from '@/services/selectGradSuccess/CSVParserService';
 
@@ -31,7 +33,6 @@ import {
   detailContainer,
   dropdownHeader,
   errorContainer,
-  flagsContainer,
   loadingContainer,
   metricRow,
   navigationButtons,
@@ -72,6 +73,47 @@ const ProducerDetailComponent = () => {
       if (targetIndex >= 0 && targetIndex < producers.length) {
         const producerData = producers[targetIndex];
         setProducer(producerData);
+
+        // Debug logging for flag values
+        if (producerData.fullName === 'Matt Jaggard') {
+          console.log('Matt Jaggard flag values:', {
+            numberOfFlags: producerData.numberOfFlags,
+            partnersWhoPairUpFlag: producerData.partnersWhoPairUpFlag,
+            baseSalaryTooLowRelativeToNBFlag: producerData.baseSalaryTooLowRelativeToNBFlag,
+            baseSalaryTooLowRelativeToBVFlag: producerData.baseSalaryTooLowRelativeToBVFlag,
+            pipFlag: producerData.pipFlag,
+            ccatFlag: producerData.ccatFlag,
+            eppFlag: producerData.eppFlag,
+            illustrateFlag: producerData.illustrateFlag,
+          });
+        }
+
+        if (producerData.fullName === 'Nate Eshlemen') {
+          console.log('Nate Eshlemen flag values:', {
+            numberOfFlags: producerData.numberOfFlags,
+            splitWinsFlag: producerData.splitWinsFlag,
+            partnersWhoPairUpFlag: producerData.partnersWhoPairUpFlag,
+            baseSalaryTooLowRelativeToNBFlag: producerData.baseSalaryTooLowRelativeToNBFlag,
+            baseSalaryTooLowRelativeToBVFlag: producerData.baseSalaryTooLowRelativeToBVFlag,
+            deltaLeadershipLTMFlag: producerData.deltaLeadershipLTMFlag,
+            commutingDistanceFlag: producerData.commutingDistanceFlag,
+            moveFromPrimaryOfficeFlag: producerData.moveFromPrimaryOfficeFlag,
+            pipFlag: producerData.pipFlag,
+            ccatFlag: producerData.ccatFlag,
+            eppFlag: producerData.eppFlag,
+            illustrateFlag: producerData.illustrateFlag,
+          });
+        }
+
+        // Debug logging for BV flag specifically
+        console.log(
+          `Producer ${producerData.fullName} - baseSalaryTooLowRelativeToBVFlag:`,
+          producerData.baseSalaryTooLowRelativeToBVFlag,
+        );
+
+        // Debug logging for the entire producer record
+        console.log(`Complete producer record for ${producerData.fullName}:`, producerData);
+
         // Ensure selectedProducerIndex is set to the found producer's index
         if (selectedProducerIndex !== targetIndex) {
           setSelectedProducerIndex(targetIndex);
@@ -163,6 +205,32 @@ const ProducerDetailComponent = () => {
     return successScoreLow;
   };
 
+  const calculateLtmNBRatio = (ltmNB: string, graduationSalary: string): string => {
+    if (!ltmNB || !graduationSalary || ltmNB === '0' || graduationSalary === '0') return '0.00';
+
+    // Remove $ and commas from values and convert to numbers
+    const ltmNBValue = parseFloat(ltmNB.replace(/[\$,]/g, ''));
+    const salaryValue = parseFloat(graduationSalary.replace(/[\$,]/g, ''));
+
+    if (isNaN(ltmNBValue) || isNaN(salaryValue) || salaryValue === 0) return '0.00';
+
+    const ratio = ltmNBValue / salaryValue;
+    return ratio.toFixed(2);
+  };
+
+  const calculateBookRatio = (currentTotalBV: string, graduationSalary: string): string => {
+    if (!currentTotalBV || !graduationSalary || currentTotalBV === '0' || graduationSalary === '0') return '0.00';
+
+    // Remove $ and commas from values and convert to numbers
+    const bookValue = parseFloat(currentTotalBV.replace(/[\$,]/g, ''));
+    const salaryValue = parseFloat(graduationSalary.replace(/[\$,]/g, ''));
+
+    if (isNaN(bookValue) || isNaN(salaryValue) || salaryValue === 0) return '0.00';
+
+    const ratio = bookValue / salaryValue;
+    return ratio.toFixed(2);
+  };
+
   // Calculate percentile rank based on success score
   const calculatePercentile = (currentScore: number, allScores: number[]): number => {
     const scoresBelow = allScores.filter((score) => score < currentScore).length;
@@ -179,6 +247,21 @@ const ProducerDetailComponent = () => {
   // Render flag icon based on flag value - always show flag, red for Y, grey for N or empty
   const renderFlagCell = (flagValue: string) => {
     const isRed = flagValue === 'Y';
+    // Debug logging to see actual flag values
+    if (
+      producer?.fullName === 'Dan Olsen' ||
+      producer?.fullName?.includes('Dan') ||
+      producer?.fullName === 'Nate Eshlemen' ||
+      producer?.fullName?.includes('Nate')
+    ) {
+      console.log(`Flag value for ${producer.fullName}:`, flagValue, 'isRed:', isRed);
+    }
+
+    // Specific debug for Base Salary Relative to BV flag
+    if (flagValue === producer?.baseSalaryTooLowRelativeToBVFlag) {
+      console.log(`Base Salary Relative to BV flag for ${producer.fullName}:`, flagValue, 'should be red:', isRed);
+    }
+
     return (
       <Flag
         sx={{
@@ -187,6 +270,11 @@ const ProducerDetailComponent = () => {
         }}
       />
     );
+  };
+
+  // Helper function to get row style based on flag value
+  const getFlagRowStyle = (flagValue: string) => {
+    return flagValue === 'Y' ? { ...metricRow, color: '#d32f2f' } : metricRow;
   };
 
   if (isLoading) {
@@ -223,14 +311,11 @@ const ProducerDetailComponent = () => {
     <Box sx={detailContainer}>
       {/* Navigation Buttons - Top Right */}
       <Box sx={navigationButtons}>
-        <Button variant="outlined" size="small" onClick={() => navigate('/')}>
+        <Button variant="outlined" size="small" onClick={() => navigate('/select-grad-success')}>
           Home
         </Button>
-        <Button variant="outlined" size="small" onClick={() => navigate('/select-grad-success')}>
-          Dashboard
-        </Button>
         <Button variant="outlined" size="small" onClick={() => navigate('/select-grad-success/predictor')}>
-          Back to Predictor
+          Back to Dashboard
         </Button>
       </Box>
 
@@ -240,9 +325,9 @@ const ProducerDetailComponent = () => {
           Select Grad Success Predictor
         </Typography>
 
-        <Grid container spacing={4} alignItems="flex-start" sx={{ textAlign: 'left' }}>
+        <Grid container spacing={0} alignItems="flex-start" sx={{ textAlign: 'left' }}>
           {/* Producer Information */}
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={4} sx={{ display: 'flex', flexDirection: 'column', pr: 2 }}>
             <Typography variant="subtitle2" gutterBottom>
               Producer
             </Typography>
@@ -278,60 +363,125 @@ const ProducerDetailComponent = () => {
             </Typography>
           </Grid>
 
-          {/* Financial Information */}
-          <Grid item xs={6} md={2}>
-            <Typography variant="subtitle2" gutterBottom>
+          {/* Financial Information - Aligned with Current Value column */}
+          <Grid
+            item
+            md={1.5}
+            sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: '120px' }}
+          >
+            <Typography variant="subtitle2" gutterBottom align="center">
               Current Salary
             </Typography>
-            <Typography variant="h5">{formatCurrency(producer.currentSalary)}</Typography>
-            <Typography variant="body2" color="textSecondary">
+            <Typography variant="h5" align="center">
+              {formatCurrency(producer.currentSalary)}
+            </Typography>
+            <Typography variant="body2" color="textSecondary" align="center">
               <strong>Book:</strong> {formatCurrency(producer.currentTotalBV)}
             </Typography>
-            <Typography variant="body2" color="textSecondary">
+            <Typography variant="body2" color="textSecondary" align="center">
               <strong>LTM NB:</strong> {formatCurrency(producer.ltmNB)}
             </Typography>
           </Grid>
 
-          {/* Tenure Information */}
-          <Grid item xs={6} md={2}>
-            <Typography variant="subtitle2" gutterBottom>
+          {/* Tenure Information - Aligned with Expected at Tenure column */}
+          <Grid
+            item
+            md={1.75}
+            sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: '140px' }}
+          >
+            <Typography variant="subtitle2" gutterBottom align="center">
               Tenure
             </Typography>
-            <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1 }}>
-              <Typography variant="h4">{Math.round(producer.tenureHire * 12)}</Typography>
-              <Typography variant="subtitle2">Months</Typography>
+            <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1, justifyContent: 'center' }}>
+              <Typography variant="h4">{producer.tenureHire.toFixed(1)}</Typography>
+              <Typography variant="subtitle2">years</Typography>
             </Box>
-            <Typography variant="body2" color="textSecondary">
-              ({producer.tenureHire.toFixed(1)} years)
+            <Typography variant="body2" color="textSecondary" align="center">
+              ({Math.round(producer.tenureHire * 12)} Months)
             </Typography>
           </Grid>
 
-          {/* Performance Rank */}
-          <Grid item xs={6} md={2}>
-            <Typography variant="subtitle2" gutterBottom>
-              Percentile Rank
+          {/* Success Score Donut Chart - Aligned with Success Score column */}
+          <Grid
+            item
+            md={1.5}
+            sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: '120px', pl: 3 }}
+          >
+            <Typography variant="subtitle2" gutterBottom align="center">
+              Success Score
             </Typography>
-            <Typography variant="h4">
+            <Box sx={{ position: 'relative', height: 120, width: 120, margin: '0 auto' }}>
+              <ResponsivePie
+                data={[
+                  {
+                    id: 'score',
+                    value: Math.round(producer.successScore),
+                    color: producer.successScore > 60 ? '#4caf50' : producer.successScore >= 40 ? '#ff9800' : '#f44336',
+                  },
+                  {
+                    id: 'remaining',
+                    value: 100 - Math.round(producer.successScore),
+                    color: '#e0e0e0',
+                  },
+                ]}
+                innerRadius={0.7}
+                padAngle={0.7}
+                cornerRadius={3}
+                colors={(d) => d.data.color}
+                enableArcLinkLabels={false}
+                enableArcLabels={false}
+                isInteractive={false}
+                margin={{ top: 10, right: 10, bottom: 10, left: 10 }}
+              />
+              {/* Center text overlay */}
+              <Box
+                sx={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  textAlign: 'center',
+                }}
+              >
+                <Typography variant="h6" fontWeight="bold">
+                  {Math.round(producer.successScore)}
+                </Typography>
+                <Typography variant="caption" color="textSecondary">
+                  /100
+                </Typography>
+              </Box>
+            </Box>
+            <Typography variant="body2" color="textSecondary" align="center" sx={{ mt: 1 }}>
               {formatPercentile(
                 calculatePercentile(
                   producer.successScore,
                   allProducers.map((p) => p.successScore),
                 ),
-              )}
+              )}{' '}
+              percentile
             </Typography>
           </Grid>
 
-          {/* Flags */}
-          <Grid item xs={6} md={2}>
-            <Typography variant="subtitle2" gutterBottom>
+          {/* Risk Factors - Aligned with Risk Factors column */}
+          <Grid
+            item
+            md={1.5}
+            sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: '120px', pl: 5 }}
+          >
+            <Typography variant="subtitle2" gutterBottom align="center">
               Risk Factors
             </Typography>
-            <Box sx={flagsContainer}>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <Flag sx={{ color: '#d32f2f', fontSize: '2rem' }} />
               <Typography variant="h4" sx={{ ml: 1 }}>
                 {producer.numberOfFlags}
               </Typography>
             </Box>
+          </Grid>
+
+          {/* Spacer for Weighting column */}
+          <Grid item md={1.75} sx={{ minWidth: '120px' }}>
+            {/* Empty space to align with Weighting column */}
           </Grid>
         </Grid>
       </Box>
@@ -389,7 +539,9 @@ const ProducerDetailComponent = () => {
                 <>
                   <TableRow sx={metricRow}>
                     <TableCell sx={{ pl: 4 }}>Book / Starting MM Salary</TableCell>
-                    <TableCell align="center">{convertPercentageToRatio(producer.sgCurrentBVRatio)}</TableCell>
+                    <TableCell align="center">
+                      {calculateBookRatio(producer.currentTotalBV, producer.graduationSalary)}
+                    </TableCell>
                     <TableCell align="center">{producer.expectedBookStartingSalaryRatio.toFixed(2)}</TableCell>
                     <TableCell align="center" sx={successScoreCell}>
                       <Typography sx={getSuccessScoreStyle(producer.currentBVScore)}>
@@ -404,7 +556,9 @@ const ProducerDetailComponent = () => {
 
                   <TableRow sx={metricRow}>
                     <TableCell sx={{ pl: 4 }}>LTM MM NB / Starting MM Salary</TableCell>
-                    <TableCell align="center">{convertPercentageToRatio(producer.sgnbRatio)}</TableCell>
+                    <TableCell align="center">
+                      {calculateLtmNBRatio(producer.ltmNB, producer.graduationSalary)}
+                    </TableCell>
                     <TableCell align="center">{producer.expectedLtmNBStartingSalaryRatio.toFixed(2)}</TableCell>
                     <TableCell align="center" sx={successScoreCell}>
                       <Typography sx={getSuccessScoreStyle(producer.ltmNBScore)}>
@@ -575,9 +729,22 @@ const ProducerDetailComponent = () => {
 
               {expandedSections.poachingRisks && (
                 <>
-                  <TableRow sx={metricRow}>
+                  <TableRow sx={getFlagRowStyle(producer.splitWinsFlag)}>
                     <TableCell sx={{ pl: 4 }}>
                       Split Wins <Info sx={{ fontSize: '1rem', color: '#666', ml: 1 }} />
+                    </TableCell>
+                    <TableCell align="center"></TableCell>
+                    <TableCell align="center"></TableCell>
+                    <TableCell align="center" sx={successScoreCell}></TableCell>
+                    <TableCell align="center" sx={riskFactorCell}>
+                      {renderFlagCell(producer.splitWinsFlag)}
+                    </TableCell>
+                    <TableCell align="center" sx={weightingCell}></TableCell>
+                  </TableRow>
+
+                  <TableRow sx={getFlagRowStyle(producer.partnersWhoPairUpFlag)}>
+                    <TableCell sx={{ pl: 4 }}>
+                      Partners Who Pair Up <Info sx={{ fontSize: '1rem', color: '#666', ml: 1 }} />
                     </TableCell>
                     <TableCell align="center"></TableCell>
                     <TableCell align="center"></TableCell>
@@ -588,7 +755,7 @@ const ProducerDetailComponent = () => {
                     <TableCell align="center" sx={weightingCell}></TableCell>
                   </TableRow>
 
-                  <TableRow sx={metricRow}>
+                  <TableRow sx={getFlagRowStyle(producer.baseSalaryTooLowRelativeToNBFlag)}>
                     <TableCell sx={{ pl: 4 }}>
                       Current Base Salary Relative to NB <Info sx={{ fontSize: '1rem', color: '#666', ml: 1 }} />
                     </TableCell>
@@ -601,7 +768,7 @@ const ProducerDetailComponent = () => {
                     <TableCell align="center" sx={weightingCell}></TableCell>
                   </TableRow>
 
-                  <TableRow sx={metricRow}>
+                  <TableRow sx={getFlagRowStyle(producer.baseSalaryTooLowRelativeToBVFlag)}>
                     <TableCell sx={{ pl: 4 }}>
                       Current Base Salary Relative to BV <Info sx={{ fontSize: '1rem', color: '#666', ml: 1 }} />
                     </TableCell>
@@ -614,36 +781,42 @@ const ProducerDetailComponent = () => {
                     <TableCell align="center" sx={weightingCell}></TableCell>
                   </TableRow>
 
-                  <TableRow sx={metricRow}>
+                  <TableRow sx={getFlagRowStyle(producer.deltaLeadershipLTMFlag)}>
                     <TableCell sx={{ pl: 4 }}>
                       Δ Leadership LTM <Info sx={{ fontSize: '1rem', color: '#666', ml: 1 }} />
                     </TableCell>
                     <TableCell align="center"></TableCell>
                     <TableCell align="center"></TableCell>
                     <TableCell align="center" sx={successScoreCell}></TableCell>
-                    <TableCell align="center" sx={riskFactorCell}></TableCell>
+                    <TableCell align="center" sx={riskFactorCell}>
+                      {renderFlagCell(producer.deltaLeadershipLTMFlag)}
+                    </TableCell>
                     <TableCell align="center" sx={weightingCell}></TableCell>
                   </TableRow>
 
-                  <TableRow sx={metricRow}>
+                  <TableRow sx={getFlagRowStyle(producer.commutingDistanceFlag)}>
                     <TableCell sx={{ pl: 4 }}>
                       Commuting Distance <Info sx={{ fontSize: '1rem', color: '#666', ml: 1 }} />
                     </TableCell>
                     <TableCell align="center"></TableCell>
                     <TableCell align="center"></TableCell>
                     <TableCell align="center" sx={successScoreCell}></TableCell>
-                    <TableCell align="center" sx={riskFactorCell}></TableCell>
+                    <TableCell align="center" sx={riskFactorCell}>
+                      {renderFlagCell(producer.commutingDistanceFlag)}
+                    </TableCell>
                     <TableCell align="center" sx={weightingCell}></TableCell>
                   </TableRow>
 
-                  <TableRow sx={metricRow}>
+                  <TableRow sx={getFlagRowStyle(producer.moveFromPrimaryOfficeFlag)}>
                     <TableCell sx={{ pl: 4 }}>
                       Move from Primary Office <Info sx={{ fontSize: '1rem', color: '#666', ml: 1 }} />
                     </TableCell>
                     <TableCell align="center"></TableCell>
                     <TableCell align="center"></TableCell>
                     <TableCell align="center" sx={successScoreCell}></TableCell>
-                    <TableCell align="center" sx={riskFactorCell}></TableCell>
+                    <TableCell align="center" sx={riskFactorCell}>
+                      {renderFlagCell(producer.moveFromPrimaryOfficeFlag)}
+                    </TableCell>
                     <TableCell align="center" sx={weightingCell}></TableCell>
                   </TableRow>
                 </>
@@ -666,7 +839,7 @@ const ProducerDetailComponent = () => {
 
               {expandedSections.otherFactors && (
                 <>
-                  <TableRow sx={metricRow}>
+                  <TableRow sx={getFlagRowStyle(producer.pipFlag)}>
                     <TableCell sx={{ pl: 4 }}>
                       PIP History <Info sx={{ fontSize: '1rem', color: '#666', ml: 1 }} />
                     </TableCell>
@@ -679,7 +852,7 @@ const ProducerDetailComponent = () => {
                     <TableCell align="center" sx={weightingCell}></TableCell>
                   </TableRow>
 
-                  <TableRow sx={metricRow}>
+                  <TableRow sx={getFlagRowStyle(producer.ccatFlag)}>
                     <TableCell sx={{ pl: 4 }}>
                       CCAT <Info sx={{ fontSize: '1rem', color: '#666', ml: 1 }} />
                     </TableCell>
@@ -692,7 +865,7 @@ const ProducerDetailComponent = () => {
                     <TableCell align="center" sx={weightingCell}></TableCell>
                   </TableRow>
 
-                  <TableRow sx={metricRow}>
+                  <TableRow sx={getFlagRowStyle(producer.eppFlag)}>
                     <TableCell sx={{ pl: 4 }}>
                       EPP <Info sx={{ fontSize: '1rem', color: '#666', ml: 1 }} />
                     </TableCell>
@@ -705,7 +878,7 @@ const ProducerDetailComponent = () => {
                     <TableCell align="center" sx={weightingCell}></TableCell>
                   </TableRow>
 
-                  <TableRow sx={metricRow}>
+                  <TableRow sx={getFlagRowStyle(producer.illustrateFlag)}>
                     <TableCell sx={{ pl: 4 }}>
                       Illustrate <Info sx={{ fontSize: '1rem', color: '#666', ml: 1 }} />
                     </TableCell>
