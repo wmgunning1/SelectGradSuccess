@@ -51,10 +51,12 @@ const SelectGradSuccessComponent = () => {
           onClick={handleNavigateToHome}
           sx={{
             color: 'white',
-            borderColor: 'rgba(255, 255, 255, 0.3)',
+            borderColor: 'rgba(255, 255, 255, 0.4)',
+            backgroundColor: 'rgba(0, 0, 0, 0.2)', // Added for contrast
+            backdropFilter: 'blur(4px)', // Optional: for a frosted glass effect
             '&:hover': {
-              borderColor: 'rgba(255, 255, 255, 0.6)',
-              backgroundColor: 'rgba(255, 255, 255, 0.1)',
+              borderColor: 'rgba(255, 255, 255, 0.8)',
+              backgroundColor: 'rgba(0, 0, 0, 0.3)',
             },
           }}
         >

@@ -41,7 +41,6 @@ import {
   successScoreHigh,
   successScoreLow,
   successScoreMedium,
-  tenureInfo,
   weightingCell,
 } from './styles';
 
@@ -147,6 +146,17 @@ const ProducerDetailComponent = () => {
     return `${Math.round(percentValue)}%`;
   };
 
+  const convertPercentageToRatio = (value: string | number): string => {
+    if (!value || value === '0') return '0.00';
+
+    const numValue = typeof value === 'string' ? parseFloat(value.replace(/[%]/g, '')) : value;
+    if (isNaN(numValue)) return '0.00';
+
+    // Convert percentage to ratio (divide by 100)
+    const ratioValue = numValue / 100;
+    return ratioValue.toFixed(2);
+  };
+
   const getSuccessScoreStyle = (score: number) => {
     if (score > 7) return successScoreHigh;
     if (score >= 4) return successScoreMedium;
@@ -230,8 +240,9 @@ const ProducerDetailComponent = () => {
           Select Grad Success Predictor
         </Typography>
 
-        <Grid container spacing={2} alignItems="center">
-          <Grid item xs={12} md={3}>
+        <Grid container spacing={4} alignItems="flex-start" sx={{ textAlign: 'left' }}>
+          {/* Producer Information */}
+          <Grid item xs={12} md={4}>
             <Typography variant="subtitle2" gutterBottom>
               Producer
             </Typography>
@@ -241,45 +252,65 @@ const ProducerDetailComponent = () => {
                 onChange={handleProducerChange}
                 displayEmpty
               >
-                {allProducers.map((p, index) => (
-                  <MenuItem key={p.employeeId} value={index.toString()}>
-                    {p.fullName}
-                  </MenuItem>
-                ))}
+                {allProducers
+                  .filter((p) => producer && p.office === producer.office)
+                  .map((p) => {
+                    const originalIndex = allProducers.findIndex((ap) => ap.employeeId === p.employeeId);
+                    return (
+                      <MenuItem key={p.employeeId} value={originalIndex.toString()}>
+                        {p.fullName}
+                      </MenuItem>
+                    );
+                  })}
               </Select>
             </FormControl>
             <Typography variant="body2" color="textSecondary" sx={{ mt: 1 }}>
-              Direct Manager: {producer.directManager}
+              <strong>Manager:</strong> {producer.directManager}
             </Typography>
             <Typography variant="body2" color="textSecondary">
-              Vertical: Employee Benefits
+              <strong>Office:</strong> {producer.office}
+            </Typography>
+            <Typography variant="body2" color="textSecondary">
+              <strong>Region:</strong> {producer.region}
+            </Typography>
+            <Typography variant="body2" color="textSecondary">
+              <strong>Vertical:</strong> Employee Benefits
             </Typography>
           </Grid>
 
-          <Grid item xs={12} md={2}>
+          {/* Financial Information */}
+          <Grid item xs={6} md={2}>
             <Typography variant="subtitle2" gutterBottom>
               Current Salary
             </Typography>
-            <Typography variant="h6">{formatCurrency(producer.currentSalary)}</Typography>
+            <Typography variant="h5">{formatCurrency(producer.currentSalary)}</Typography>
             <Typography variant="body2" color="textSecondary">
-              MM Book: {formatCurrency(producer.currentTotalBV)}
+              <strong>Book:</strong> {formatCurrency(producer.currentTotalBV)}
             </Typography>
             <Typography variant="body2" color="textSecondary">
-              LTM MM NB: {formatCurrency(producer.ltmNB)}
+              <strong>LTM NB:</strong> {formatCurrency(producer.ltmNB)}
             </Typography>
           </Grid>
 
-          <Grid item xs={12} md={2}>
-            <Box sx={tenureInfo}>
+          {/* Tenure Information */}
+          <Grid item xs={6} md={2}>
+            <Typography variant="subtitle2" gutterBottom>
+              Tenure
+            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1 }}>
               <Typography variant="h4">{Math.round(producer.tenureHire * 12)}</Typography>
               <Typography variant="subtitle2">Months</Typography>
             </Box>
             <Typography variant="body2" color="textSecondary">
-              MM Tenure: {producer.tenureHire.toFixed(1)}
+              ({producer.tenureHire.toFixed(1)} years)
             </Typography>
           </Grid>
 
-          <Grid item xs={12} md={2}>
+          {/* Performance Rank */}
+          <Grid item xs={6} md={2}>
+            <Typography variant="subtitle2" gutterBottom>
+              Percentile Rank
+            </Typography>
             <Typography variant="h4">
               {formatPercentile(
                 calculatePercentile(
@@ -288,16 +319,17 @@ const ProducerDetailComponent = () => {
                 ),
               )}
             </Typography>
-            <Typography variant="body2" color="textSecondary">
-              Percentile Rank
-            </Typography>
           </Grid>
 
-          <Grid item xs={12} md={2}>
+          {/* Flags */}
+          <Grid item xs={6} md={2}>
+            <Typography variant="subtitle2" gutterBottom>
+              Risk Factors
+            </Typography>
             <Box sx={flagsContainer}>
               <Flag sx={{ color: '#d32f2f', fontSize: '2rem' }} />
-              <Typography variant="body2" color="textSecondary">
-                {producer.numberOfFlags} Flags
+              <Typography variant="h4" sx={{ ml: 1 }}>
+                {producer.numberOfFlags}
               </Typography>
             </Box>
           </Grid>
@@ -357,7 +389,7 @@ const ProducerDetailComponent = () => {
                 <>
                   <TableRow sx={metricRow}>
                     <TableCell sx={{ pl: 4 }}>Book / Starting MM Salary</TableCell>
-                    <TableCell align="center">0.00</TableCell>
+                    <TableCell align="center">{convertPercentageToRatio(producer.sgCurrentBVRatio)}</TableCell>
                     <TableCell align="center">{producer.expectedBookStartingSalaryRatio.toFixed(2)}</TableCell>
                     <TableCell align="center" sx={successScoreCell}>
                       <Typography sx={getSuccessScoreStyle(producer.currentBVScore)}>
@@ -372,7 +404,7 @@ const ProducerDetailComponent = () => {
 
                   <TableRow sx={metricRow}>
                     <TableCell sx={{ pl: 4 }}>LTM MM NB / Starting MM Salary</TableCell>
-                    <TableCell align="center">0.00</TableCell>
+                    <TableCell align="center">{convertPercentageToRatio(producer.sgnbRatio)}</TableCell>
                     <TableCell align="center">{producer.expectedLtmNBStartingSalaryRatio.toFixed(2)}</TableCell>
                     <TableCell align="center" sx={successScoreCell}>
                       <Typography sx={getSuccessScoreStyle(producer.ltmNBScore)}>
@@ -496,7 +528,7 @@ const ProducerDetailComponent = () => {
 
                   <TableRow sx={metricRow}>
                     <TableCell sx={{ pl: 4 }}>Number of Wins</TableCell>
-                    <TableCell align="center">{producer.numberOfWins}</TableCell>
+                    <TableCell align="center">{producer.numberOfWinsSinceGraduation}</TableCell>
                     <TableCell align="center">{producer.expectedNumberOfWins}</TableCell>
                     <TableCell align="center" sx={successScoreCell}>
                       <Typography sx={getSuccessScoreStyle(producer.numberOfWinsScore)}>

@@ -14,7 +14,7 @@ const routes: Routes = {
     title: 'Select Grad Success',
   },
   [Pages.SelectGradSuccessPredictor]: {
-    component: UsiAsyncComponentLoader(() => import('@/pages/SelectGradSuccess/Predictor')),
+    component: UsiAsyncComponentLoader(() => import('@/pages/SelectGradSuccess/Summary')),
     path: '/select-grad-success/predictor',
     title: 'Select Grad Success Predictor',
   },
